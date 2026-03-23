@@ -81,7 +81,7 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; height: 100%; }
 body {
-  background: #111118;
+  background: var(--background);
   transition: background 0.2s;
   color: var(--foreground);
   font-family: 'Geist', -apple-system, sans-serif;
@@ -91,7 +91,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -100,11 +99,6 @@ body {
 .phone-frame {
   width: 393px;
   height: 852px;
-  border-radius: 50px;
-  box-shadow:
-    0 0 0 2px #555,
-    0 0 0 10px #1c1c1e,
-    0 50px 120px rgba(0,0,0,0.85);
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -142,93 +136,6 @@ body {
 .phone-screen .output-row .btn { width: 100%; justify-content: center; }
 .phone-screen .modal-overlay { position: absolute; }
 .phone-screen footer { flex-shrink: 0; }
-:root.light body { background: #e8e8ed; }
-
-/* ── STATUS BAR ── */
-.status-bar {
-  flex-shrink: 0;
-  height: 54px;
-  background: var(--background);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 0 28px 8px;
-  position: relative;
-  z-index: 10;
-}
-/* Dynamic Island */
-.status-bar::after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 34px;
-  background: #000;
-  border-radius: 20px;
-  z-index: 20;
-}
-.status-time {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--foreground);
-  letter-spacing: -0.3px;
-  line-height: 1;
-}
-.status-icons {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.status-icons svg {
-  display: block;
-  flex-shrink: 0;
-}
-/* Signal bars */
-.signal-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 12px;
-}
-.signal-bar {
-  width: 3px;
-  background: var(--foreground);
-  border-radius: 1px;
-}
-.signal-bar:nth-child(1) { height: 4px; }
-.signal-bar:nth-child(2) { height: 6px; }
-.signal-bar:nth-child(3) { height: 9px; }
-.signal-bar:nth-child(4) { height: 12px; }
-/* Battery */
-.battery {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-}
-.battery-body {
-  width: 22px;
-  height: 11px;
-  border: 1.5px solid var(--foreground);
-  border-radius: 3px;
-  padding: 1.5px 2px;
-  display: flex;
-  align-items: center;
-}
-.battery-fill {
-  height: 100%;
-  width: 75%;
-  background: var(--foreground);
-  border-radius: 1px;
-}
-.battery-tip {
-  width: 2px;
-  height: 5px;
-  background: var(--foreground);
-  border-radius: 0 1px 1px 0;
-  opacity: 0.5;
-}
 .mono { font-family: 'Geist Mono', monospace; }
 
 
@@ -355,7 +262,6 @@ header {
   color: var(--card-foreground);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) + 2px);
-  box-shadow: var(--shadow);
 }
 .card-header { padding: 20px 20px 0; display: flex; align-items: center; gap: 10px; }
 .card-header-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
@@ -461,6 +367,45 @@ header {
   color: var(--destructive);
 }
 
+/* ── TOAST ── */
+.toast-container {
+  position: absolute;
+  bottom: 72px;
+  left: 12px; right: 12px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: all;
+  animation: toastIn 0.2s ease;
+}
+.toast.toast-destructive {
+  border-color: rgba(239,68,68,0.3);
+  background: var(--card);
+}
+.toast-body { flex: 1; }
+.toast-title { font-size: 13px; font-weight: 400; color: var(--foreground); margin-bottom: 2px; }
+.toast-desc { font-size: 12px; color: var(--muted-foreground); line-height: 1.4; }
+.toast-destructive .toast-title { color: var(--destructive); }
+.toast-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted-foreground); font-size: 14px; padding: 0; line-height: 1; flex-shrink: 0;
+}
+.toast-close:hover { color: var(--foreground); }
+@keyframes toastIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
 /* ── LAYOUT ── */
 .page { display: none; flex: 1; }
 .page.active { display: flex; flex-direction: column; }
@@ -550,23 +495,19 @@ header {
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
 
 .divider-label {
-  display: flex; align-items: center; gap: 12px;
   margin-bottom: 20px;
 }
-.divider-label::before, .divider-label::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-.divider-label span { font-size: 11px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
+.divider-label span { font-size: 16px; font-weight: 400; color: var(--foreground); letter-spacing: -0.2px; }
 
-.summary-text { font-size: 15px; line-height: 1.7; color: var(--foreground); font-weight: 400; }
+.summary-text { font-size: 14px; line-height: 1.7; color: var(--foreground); font-weight: 400; }
 
 .themes-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .action-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .action-item:last-child { border-bottom: none; padding-bottom: 0; }
 .action-num { color: var(--primary); font-size: 11px; font-weight: 600; min-width: 20px; padding-top: 1px; font-family: 'Geist Mono', monospace; }
-.action-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.action-why { font-size: 12px; color: var(--muted-foreground); line-height: 1.5; }
+.action-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.action-why { font-size: 14px; color: var(--muted-foreground); line-height: 1.5; }
 
 .output-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
 
@@ -595,20 +536,20 @@ header {
 .cal-chip {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px; min-width: 48px; height: 60px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius); cursor: default;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: pointer;
   transition: all 0.15s; flex-shrink: 0; padding: 0 6px;
 }
 .cal-chip-day { font-size: 10px; font-weight: 500; color: var(--muted-foreground); letter-spacing: 0.04em; }
-.cal-chip-num { font-size: 15px; font-weight: 600; color: var(--muted-foreground); line-height: 1; }
+.cal-chip-num { font-size: 15px; font-weight: 600; color: var(--foreground); line-height: 1; }
 .cal-chip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--primary); margin-top: 2px; }
 .cal-chip.today { border-color: var(--primary); }
 .cal-chip.today .cal-chip-day, .cal-chip.today .cal-chip-num { color: var(--primary); }
 .cal-chip { cursor: pointer; }
 .cal-chip.has-entry .cal-chip-num { color: var(--foreground); }
 .cal-chip.has-entry:hover { border-color: var(--primary); background: var(--primary-dim); }
-.cal-chip.selected { background: #f5f5f5; border-color: var(--primary); }
-.cal-chip.selected .cal-chip-day, .cal-chip.selected .cal-chip-num { color: var(--primary); }
+.cal-chip.selected { background: var(--foreground); border-color: var(--foreground); }
+.cal-chip.selected .cal-chip-day, .cal-chip.selected .cal-chip-num { color: var(--background); }
 
 /* Entry panel */
 .entry-panel { animation: fadeUp 0.2s ease; }
@@ -628,7 +569,7 @@ header {
 .filter-row::-webkit-scrollbar { display: none; }
 
 .filter-btn {
-  display: inline-flex; align-items: center; gap: 5px;
+  display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
   background: var(--background); border: 1px solid var(--border);
   color: var(--muted-foreground); font-family: 'Geist', sans-serif;
   font-size: 12px; font-weight: 500;
@@ -638,10 +579,11 @@ header {
 .filter-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
 .filter-btn.active { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); }
 .filter-badge {
-  display: none; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center;
   min-width: 16px; height: 16px; border-radius: 9999px;
   background: var(--border); color: var(--muted-foreground);
   font-size: 9px; font-weight: 600; padding: 0 4px;
+  vertical-align: middle;
 }
 .filter-btn.active .filter-badge { background: var(--primary); color: var(--primary-foreground); }
 
@@ -767,9 +709,9 @@ header {
   z-index: 50; background: var(--nav-bg); backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
 }
-.bottom-nav-inner { display: flex; height: 60px; }
+.bottom-nav-inner { display: flex; height: 60px; justify-content: center; gap: 0; }
 .bottom-tab {
-  flex: 1; background: none; border: none; color: var(--foreground);
+  flex: 0 0 100px; background: none; border: none; color: var(--foreground);
   font-family: 'Geist', sans-serif; font-size: 10px; font-weight: 500;
   cursor: pointer; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 3px;
@@ -779,6 +721,13 @@ header {
 .bottom-tab-icon { font-size: 16px; line-height: 1; }
 .bottom-lucide-icon { display: block; }
 .bottom-tab.active { color: var(--foreground); opacity: 1; }
+.bottom-tab-write { opacity: 1 !important; display: flex; align-items: center; justify-content: center; }
+.write-tab-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--foreground); color: var(--background);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0;
+}
 
 /* ── RESPONSIVE ── */
 @media(max-width: 600px) {
@@ -803,38 +752,13 @@ footer {
 <div class="phone-frame">
 <div class="phone-screen">
 
-<!-- ── STATUS BAR ── -->
-<div class="status-bar">
-  <div class="status-time" id="statusTime">9:41</div>
-  <div class="status-icons">
-    <!-- Signal -->
-    <div class="signal-bars">
-      <div class="signal-bar"></div>
-      <div class="signal-bar"></div>
-      <div class="signal-bar"></div>
-      <div class="signal-bar"></div>
-    </div>
-    <!-- Wi-Fi -->
-    <svg width="16" height="12" viewBox="0 0 24 18" fill="none">
-      <path d="M1 6.5C5.5 2 10.4 0 12 0s6.5 2 11 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M4.5 10.5C7 8 9.7 7 12 7s5 1 7.5 3.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <path d="M8 14.5C9.5 13 10.8 12.5 12 12.5s2.5.5 4 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
-      <circle cx="12" cy="17" r="1.5" fill="currentColor"/>
-    </svg>
-    <!-- Battery -->
-    <div class="battery">
-      <div class="battery-body"><div class="battery-fill"></div></div>
-      <div class="battery-tip"></div>
-    </div>
-  </div>
-</div>
 
 <!-- ── HEADER ── -->
 <header>
   <div class="nav-logo">Debrief</div>
   <nav class="nav-tabs">
-    <button class="nav-tab active" id="tab-journal" onclick="showPage('journal')"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Journal</button>
-    <button class="nav-tab" id="tab-calendar" onclick="showPage('calendar')"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Calendar</button>
+    <button class="nav-tab active" id="tab-calendar" onclick="showPage('calendar')"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Calendar</button>
+    <button class="nav-tab" id="tab-write" onclick="showPage('write')"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>Write</button>
     <button class="nav-tab" id="tab-actions" onclick="showPage('actions')"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Actions</button>
   </nav>
   <div class="nav-right">
@@ -850,45 +774,28 @@ footer {
 
 <div class="phone-content">
 
-<!-- ════ JOURNAL PAGE ════ -->
-<div class="page active" id="page-journal">
+<!-- ════ WRITE PAGE ════ -->
+<div class="page" id="page-write">
   <div class="container">
-
-    <!-- Input -->
-    <div id="inputSection">
-      <!-- Empty state -->
-      <div id="emptyState" class="empty-state" style="display:none;">
-        <div class="empty-icon"><img src="trans.png" alt=""></div>
-        <div class="empty-title">Start your first entry</div>
-        <p class="empty-sub">Write about your day or a problem you're working through. Claude will summarise and build you an action plan.</p>
-        <button class="btn btn-default" onclick="document.getElementById('emptyState').style.display='none';document.getElementById('inputCard').style.display='block';document.getElementById('journalInput').focus()">
-          Write first entry
-        </button>
-      </div>
-
-      <!-- Input card -->
-      <div id="inputCard" style="border:none;background:none;">
-        <div style="margin-bottom:14px;">
-          <div class="card-title">What's on your mind?</div>
-          <div class="card-description">Your entry is analysed by Claude and never stored on a server.</div>
+    <div style="margin-bottom:14px;">
+      <div class="card-title">What's on your mind?</div>
+      <div class="card-description">Your entry is analysed by Claude and never stored on a server.</div>
+    </div>
+    <div id="writeInputSection">
+      <textarea class="textarea" id="journalInput" placeholder="Tell me about your day or a problem you're facing…"></textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+        <span class="text-xs text-muted" id="charCount">0 characters</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="showPage('calendar')">Cancel</button>
+          <button class="btn btn-default" id="submitBtn" onclick="analyseEntry()">
+            <span class="spinner" id="spinner"></span>
+            <span id="btnText">Let's cook</span>
+          </button>
         </div>
-        <textarea class="textarea" id="journalInput" placeholder="Tell me about your day or a problem you're facing…"></textarea>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
-          <span class="text-xs text-muted" id="charCount">0 characters</span>
-          <div style="display:flex;gap:8px;">
-            <button class="btn btn-outline btn-sm" onclick="document.getElementById('inputCard').style.display='none';document.getElementById('emptyState').style.display='flex';">Cancel</button>
-            <button class="btn btn-default" id="submitBtn" onclick="analyseEntry()">
-              <span class="spinner" id="spinner"></span>
-              <span id="btnText">Analyse</span>
-            </button>
-          </div>
-        </div>
-        <div class="alert alert-destructive" id="errorMsg" style="margin-top:10px;"></div>
       </div>
     </div>
-
     <!-- Skeleton -->
-    <div class="skeleton-wrap" id="skeletonWrap">
+    <div class="skeleton-wrap" id="skeletonWrap" style="display:none;">
       <div class="skeleton-pulse">
         <div class="skeleton-dot"></div>
         <span class="text-sm text-muted">Analysing your entry…</span>
@@ -897,60 +804,11 @@ footer {
       <div class="card" style="margin-bottom:10px;"><div class="card-content"><div class="skeleton-bar" style="height:36px;border-radius:6px;"></div></div></div>
       <div class="card"><div class="card-content"><div class="skeleton-bar" style="height:100px;border-radius:6px;"></div></div></div>
     </div>
-
-    <!-- Output -->
-    <div class="output-section" id="outputSection">
-      <div class="divider-label"><span>Your Debrief</span></div>
-
-      <!-- Summary card -->
-      <div class="card" style="margin-bottom:10px;">
-        <div class="card-header">
-          <div class="card-header-row">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div class="card-icon card-icon-primary">✦</div>
-              <span class="card-title">Summary</span>
-            </div>
-            <button class="btn btn-ghost btn-sm" onclick="openShareModal()" style="font-size:12px;color:var(--muted-foreground);">↗ Share</button>
-          </div>
-        </div>
-        <div class="card-content">
-          <p class="summary-text" id="summaryText"></p>
-        </div>
-      </div>
-
-      <!-- Themes card -->
-      <div class="card" style="margin-bottom:10px;">
-        <div class="card-header">
-          <div class="card-icon card-icon-warning">◎</div>
-          <span class="card-title">Themes & Signals</span>
-        </div>
-        <div class="card-content">
-          <div class="themes-row" id="moodRow"></div>
-        </div>
-      </div>
-
-      <!-- Actions card -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-header">
-          <div class="card-icon card-icon-destructive">▸</div>
-          <span class="card-title">Action Plan</span>
-        </div>
-        <div class="card-content">
-          <div id="actionList"></div>
-        </div>
-      </div>
-
-      <div class="output-row">
-        <button class="btn btn-outline btn-sm" onclick="resetJournal()">+ New Entry</button>
-        <button class="btn btn-outline btn-sm" onclick="showPage('actions')">View All Actions →</button>
-        <button class="btn btn-outline btn-sm" onclick="showPage('calendar')">Calendar →</button>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- ════ CALENDAR PAGE ════ -->
-<div class="page" id="page-calendar">
+<div class="page active" id="page-calendar">
   <div class="container container-wide">
 
     <!-- Month header -->
@@ -1037,7 +895,7 @@ footer {
     <input class="input" id="apiKeyInput" type="password" placeholder="sk-ant-…" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter')saveApiKey()">
     <div id="apiKeyError" style="display:none;font-size:12px;color:var(--destructive);margin-bottom:8px;">Invalid key — must start with sk-ant-</div>
     <div class="modal-btns">
-      <button class="btn btn-default" onclick="saveApiKey()">Save & Analyse</button>
+      <button class="btn btn-default" onclick="saveApiKey()">Save & Let's cook</button>
       <button class="btn btn-outline" onclick="closeApiKeyModal()">Cancel</button>
     </div>
   </div>
@@ -1057,17 +915,24 @@ footer {
   </div>
 </div>
 
+<!-- ── TOAST ── -->
+<div class="toast-container" id="toastContainer"></div>
+
 <!-- ── MOBILE BOTTOM NAV ── -->
 <div class="bottom-nav">
   <div class="bottom-nav-inner">
-    <button class="bottom-tab active" id="btab-journal" onclick="showPage('journal')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Journal
+    <button class="bottom-tab active" id="btab-calendar" onclick="showPage('calendar')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+      Calendar
     </button>
-    <button class="bottom-tab" id="btab-calendar" onclick="showPage('calendar')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Calendar
+    <button class="bottom-tab bottom-tab-write" id="btab-write" onclick="showPage('write')">
+      <div class="write-tab-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+      </div>
     </button>
     <button class="bottom-tab" id="btab-actions" onclick="showPage('actions')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Actions
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+      Actions
     </button>
   </div>
 </div>
@@ -1089,7 +954,7 @@ const todayKey = toKey(today);
 function toKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function fromKey(k) { const [y,m,d] = k.split('-').map(Number); return new Date(y, m-1, d); }
 function formatLabel(k) { return fromKey(k).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric'}).toUpperCase(); }
-document.getElementById('dateStamp').textContent = today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+// dateStamp removed
 
 // ══ THEME ══
 function setThemeIcons(light) {
@@ -1119,34 +984,61 @@ function renderStreak() {
 
 // ══ NAV ══
 function showPage(name) {
-  ['journal','calendar','actions'].forEach(p => {
+  ['write','calendar','actions'].forEach(p => {
     document.getElementById('page-'+p).classList.toggle('active', p === name);
-    document.getElementById('tab-'+p).classList.toggle('active', p === name);
+    const tab = document.getElementById('tab-'+p);
+    if (tab) tab.classList.toggle('active', p === name);
     const bt = document.getElementById('btab-'+p);
     if (bt) bt.classList.toggle('active', p === name);
   });
+  if (name === 'write') resetWrite();
   if (name === 'calendar') renderCalendar();
   if (name === 'actions')  renderBoard();
 }
 
-// ══ JOURNAL ══
+function resetWrite() {
+  textarea.value = '';
+  document.getElementById('charCount').textContent = '0 characters';
+  document.getElementById('writeInputSection').style.display = 'block';
+  document.getElementById('skeletonWrap').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('spinner').style.display = 'none';
+  document.getElementById('btnText').textContent = "Let's cook";
+}
+
+// ══ WRITE ══
 const textarea = document.getElementById('journalInput');
 textarea.addEventListener('input', () => document.getElementById('charCount').textContent = `${textarea.value.length} characters`);
 let _result = null;
 
-(function initJournal() {
-  const entries = getEntries(), todayEntry = entries[todayKey];
-  if (todayEntry?.raw) { textarea.value = todayEntry.raw; document.getElementById('charCount').textContent = `${textarea.value.length} characters`; }
-  if (todayEntry?.summary) { _result = todayEntry; renderOutput(todayEntry); }
-  else if (Object.keys(entries).length === 0) {
-    document.getElementById('emptyState').style.display = 'flex';
-    document.getElementById('inputCard').style.display = 'none';
-  }
-})();
-
 async function analyseEntry() {
   const input = textarea.value.trim();
   if (!input || input.length < 20) { showError('Please write a bit more for a better debrief.'); return; }
+
+  // ── DEMO MODE: bypass API ──
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('btnText').textContent = 'Analysing…';
+  document.getElementById('writeInputSection').style.display = 'none';
+  document.getElementById('skeletonWrap').style.display = 'block';
+  await new Promise(r => setTimeout(r, 1200));
+  const dummyParsed = {
+    summary: "You've been juggling a lot today — between deep work and back-to-back meetings, it's clear you're feeling the tension between doing and planning. There's real momentum here, but also a need to protect your focus time more deliberately.",
+    themes: ["focus", "productivity", "planning", "meetings", "energy"],
+    actions: [
+      { title: "Block 2-hour deep work slots in your calendar", why: "Uninterrupted time is where your best work happens — guard it like a meeting.", priority: "high", uid: `${todayKey}_0_demo` },
+      { title: "Write a 3-item priority list each morning", why: "Starting the day with clarity reduces decision fatigue and keeps you on track.", priority: "high", uid: `${todayKey}_1_demo` },
+      { title: "Decline or delegate one recurring meeting this week", why: "Not every meeting needs you — freeing even one hour compounds over time.", priority: "medium", uid: `${todayKey}_2_demo` },
+      { title: "Do a 10-minute end-of-day review", why: "A quick daily reflection closes open loops and helps you decompress.", priority: "low", uid: `${todayKey}_3_demo` },
+    ]
+  };
+  const entry = { raw: input, summary: dummyParsed.summary, themes: dummyParsed.themes, actions: dummyParsed.actions, date: todayKey, savedAt: new Date().toISOString() };
+  saveEntry(todayKey, entry);
+  _result = dummyParsed;
+  renderStreak();
+  showPage('calendar');
+  return;
+  // ── END DEMO MODE ──
 
   let apiKey = localStorage.getItem('debrief_apikey');
   if (!apiKey) {
@@ -1157,7 +1049,6 @@ async function analyseEntry() {
   document.getElementById('submitBtn').disabled = true;
   document.getElementById('spinner').style.display = 'block';
   document.getElementById('btnText').textContent = 'Analysing…';
-  document.getElementById('errorMsg').style.display = 'none';
   document.getElementById('inputSection').style.display = 'none';
   document.getElementById('skeletonWrap').style.display = 'block';
 
@@ -1187,16 +1078,15 @@ Generate 3-5 concrete, specific actions.`;
     const entry = { raw: input, summary: parsed.summary, themes: parsed.themes, actions: parsed.actions, date: todayKey, savedAt: new Date().toISOString() };
     saveEntry(todayKey, entry);
     _result = parsed;
-    document.getElementById('skeletonWrap').style.display = 'none';
-    renderOutput(parsed);
     renderStreak();
+    showPage('calendar');
   } catch(err) {
     document.getElementById('skeletonWrap').style.display = 'none';
-    document.getElementById('inputSection').style.display = 'block';
+    document.getElementById('writeInputSection').style.display = 'block';
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('spinner').style.display = 'none';
-    document.getElementById('btnText').textContent = 'Analyse';
-    showError('Something went wrong: ' + err.message);
+    document.getElementById('btnText').textContent = "Let's cook";
+    showError(err.message, true);
   }
 }
 
@@ -1215,37 +1105,25 @@ function saveApiKey() {
   analyseEntry();
 }
 
-function renderOutput(data) {
-  document.getElementById('summaryText').textContent = data.summary;
-  const mr = document.getElementById('moodRow');
-  mr.innerHTML = '';
-  (data.themes||[]).forEach(t => { const b = document.createElement('span'); b.className = 'badge badge-secondary'; b.textContent = t; mr.appendChild(b); });
-  const al = document.getElementById('actionList');
-  al.innerHTML = '';
-  const pm = { high:'badge-destructive', medium:'badge-warning', low:'badge-success' };
-  (data.actions||[]).forEach((a, i) => {
-    const div = document.createElement('div'); div.className = 'action-item';
-    div.innerHTML = `<div class="action-num">0${i+1}</div><div><div class="action-title">${a.title}<span class="badge ${pm[a.priority]||'badge-outline'}" style="margin-left:6px;">${a.priority}</span></div><div class="action-why">${a.why}</div></div>`;
-    al.appendChild(div);
-  });
-  document.getElementById('inputSection').style.display = 'none';
-  document.getElementById('outputSection').style.display = 'block';
-}
 
-function resetJournal() {
-  _result = null; textarea.value = '';
-  document.getElementById('charCount').textContent = '0 characters';
-  document.getElementById('outputSection').style.display = 'none';
-  document.getElementById('inputSection').style.display = 'block';
-  document.getElementById('inputCard').style.display = 'block';
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('spinner').style.display = 'none';
-  document.getElementById('btnText').textContent = 'Analyse';
-  document.getElementById('errorMsg').style.display = 'none';
+let _toastTimer = null;
+function showToast(title, desc, type = 'soft') {
+  const container = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type === 'hard' ? ' toast-destructive' : '');
+  t.innerHTML = `<div class="toast-body"><div class="toast-title">${title}</div>${desc ? `<div class="toast-desc">${desc}</div>` : ''}</div><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+  container.appendChild(t);
+  if (type === 'soft') {
+    setTimeout(() => t.remove(), 5000);
+  }
 }
-
-function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.style.display = 'block'; }
+function showError(msg, hard = false) {
+  if (hard) {
+    showToast('Something went wrong', msg, 'hard');
+  } else {
+    showToast(msg, '', 'soft');
+  }
+}
 
 // ══ SHARE ══
 let _shareEntry = null, _shareKey = null;
@@ -1297,9 +1175,11 @@ function renderCalendar() {
     chip.onclick = () => selectDay(key);
     strip.appendChild(chip);
   }
+  // Auto-select: prefer today if it has an entry, else last selected
+  const autoKey = entries[todayKey] ? todayKey : (selectedKey || todayKey);
+  selectDay(autoKey);
   setTimeout(() => {
-    const targetKey = selectedKey || todayKey;
-    const [ty, tm, td] = targetKey.split('-').map(Number);
+    const [ty, tm, td] = autoKey.split('-').map(Number);
     if (tm - 1 === calMonth && ty === calYear) {
       const chips = strip.querySelectorAll('.cal-chip');
       if (chips[td-1]) chips[td-1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -1316,19 +1196,45 @@ function selectDay(key) {
   if (chips[td-1]) { chips[td-1].classList.add('selected'); chips[td-1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
   const entry = getEntries()[key];
   const instr = document.getElementById('calInstruction');
-  if (!entry) { if (instr) instr.style.display = ''; return; }
+  const panel = document.getElementById('entryPanel');
+  if (!entry) {
+    if (instr) instr.style.display = '';
+    panel.innerHTML = '';
+    return;
+  }
   if (instr) instr.style.display = 'none';
-  const themes = (entry.themes||[]).map(t => `<span class="badge badge-secondary">${t}</span>`).join('');
-  document.getElementById('entryPanel').innerHTML = `
-    <div class="card">
-      <div class="card-content">
-        <div class="entry-panel-date">${formatLabel(key)}</div>
-        <p class="entry-panel-summary">${entry.summary||''}</p>
-        <div class="entry-panel-themes">${themes}</div>
-        <div class="entry-panel-raw">${entry.raw||''}</div>
-        <div class="entry-panel-actions">
-          <button class="btn-link" onclick="showActionsForDate('${key}')">View actions →</button>
-          <button class="btn-link" style="color:var(--muted-foreground);margin-left:8px;" onclick="openShareModal(getEntries()['${key}'],'${key}')">Share ↗</button>
+  const pc = { high:'var(--destructive)', medium:'var(--warning)', low:'var(--success)' };
+  const actionsHTML = (entry.actions||[]).map((a) => `
+    <div style="margin-bottom:8px;">
+      <div style="border-left:3px solid ${pc[a.priority]||'var(--border)'};padding:10px 10px 10px 12px;border-radius:0 6px 6px 0;">
+        <div class="action-title" style="margin-bottom:3px;">${a.title}</div>
+        <div class="action-why">${a.why}</div>
+      </div>
+    </div>`).join('');
+  const bodyId = 'cb-' + key.replace(/-/g,'');
+  panel.innerHTML = `
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header" style="cursor:pointer;padding:16px 20px;" onclick="(function(b,p){const open=p.style.display!=='none';p.style.display=open?'none':'block';b.style.transform=open?'rotate(0deg)':'rotate(180deg)';})(document.getElementById('arr-${key.replace(/-/g,'')}'),document.getElementById('${bodyId}'))"">
+        <div class="card-header-row">
+          <span style="font-size:11px;font-weight:500;color:var(--muted-foreground);letter-spacing:0.05em;text-transform:uppercase;">${formatLabel(key)}</span>
+          <svg id="arr-${key.replace(/-/g,'')}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;transform:rotate(180deg);color:var(--muted-foreground);flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div id="${bodyId}">
+        <div class="card-content">
+          <span class="card-title" style="display:block;margin-bottom:10px;">Summary</span>
+          <p class="summary-text">${entry.summary||''}</p>
+        </div>
+        <div style="border-top:1px solid var(--border);margin:0 20px;"></div>
+        <div class="card-content" style="padding-top:14px;">
+          <div class="card-header-row" style="margin-bottom:12px;">
+            <span class="card-title">Action Plan</span>
+            <button class="btn btn-outline btn-sm" onclick="openShareModal(getEntries()['${key}'],'${key}')" style="font-size:12px;">Share</button>
+          </div>
+          <div>${actionsHTML}</div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-sm" onclick="showActionsForDate('${key}')" style="font-size:12px;border:1px solid var(--border);background:transparent;color:var(--foreground);">View all actions</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1384,7 +1290,7 @@ function renderBoard() {
   };
   Object.keys(counts).forEach(k => {
     const badge = document.getElementById('fbadge-'+k);
-    if (badge) { badge.textContent = counts[k]; badge.style.display = counts[k] > 0 ? 'inline-flex' : 'none'; }
+    if (badge) { badge.textContent = counts[k]; badge.style.visibility = counts[k] > 0 ? 'visible' : 'hidden'; }
   });
 
   let filtered = all.filter(a => {
@@ -1439,18 +1345,19 @@ function renderBoard() {
 
     const body = document.createElement('div');
     body.className = 'acc-body';
-    const pm = { high:'badge-destructive', medium:'badge-warning', low:'badge-success' };
+    const pc = { high:'var(--destructive)', medium:'var(--warning)', low:'var(--success)' };
 
     actions.forEach(a => {
       const isDone = done.includes(a.uid);
       const card = document.createElement('div');
       card.className = 'action-card' + (isDone ? ' done' : '');
+      card.style.cssText = `border-left:3px solid ${pc[a.priority]||'var(--border)'};padding:10px 14px 10px 12px;border-radius:0 6px 6px 0;margin-bottom:8px;background:none;border-top:none;border-right:none;border-bottom:none;`;
       card.innerHTML = `
-        <div class="action-check">${isDone ? '✓' : ''}</div>
         <div class="action-card-body">
-          <div class="action-card-title">${a.title}<span class="badge ${pm[a.priority]||'badge-outline'}" style="margin-left:6px;">${a.priority}</span></div>
+          <div class="action-card-title">${a.title}</div>
           <div class="action-card-meta">${a.why}</div>
         </div>
+        <div class="action-check" style="flex-shrink:0;margin-top:2px;">${isDone ? '✓' : ''}</div>
       `;
       card.querySelector('.action-check').onclick = () => {
         const nowDone = toggleDone(a.uid);
@@ -1511,17 +1418,8 @@ function exportMarkdown() {
 
 // ══ INIT ══
 renderStreak();
+renderCalendar();
 
-// ══ STATUS BAR CLOCK ══
-function updateClock() {
-  const el = document.getElementById('statusTime');
-  if (!el) return;
-  const now = new Date();
-  let h = now.getHours(), m = now.getMinutes();
-  el.textContent = h + ':' + String(m).padStart(2, '0');
-}
-updateClock();
-setInterval(updateClock, 10000);
 </script>
 </body>
 </html>
