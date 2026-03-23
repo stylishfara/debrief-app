@@ -15,11 +15,11 @@
   --card-foreground: #fafafa;
   --popover: #09090b;
   --popover-foreground: #fafafa;
-  --primary: #2D40AF;
-  --primary-foreground: #fafafa;
-  --primary-hover: #3649c4;
-  --primary-dim: rgba(45,64,175,0.15);
-  --primary-border: rgba(45,64,175,0.3);
+  --primary: #fafafa;
+  --primary-foreground: #09090b;
+  --primary-hover: #e4e4e7;
+  --primary-dim: rgba(250,250,250,0.1);
+  --primary-border: rgba(250,250,250,0.2);
   --secondary: #27272a;
   --secondary-foreground: #fafafa;
   --muted: #27272a;
@@ -31,7 +31,7 @@
   --destructive-dim: rgba(239,68,68,0.12);
   --border: #27272a;
   --input: #27272a;
-  --ring: #2D40AF;
+  --ring: #fafafa;
   --radius: 0.5rem;
   --warning: #f59e0b;
   --warning-dim: rgba(245,158,11,0.12);
@@ -50,11 +50,11 @@
   --card-foreground: #09090b;
   --popover: #ffffff;
   --popover-foreground: #09090b;
-  --primary: #2D40AF;
+  --primary: #0a0a0a;
   --primary-foreground: #ffffff;
-  --primary-hover: #3649c4;
-  --primary-dim: rgba(45,64,175,0.08);
-  --primary-border: rgba(45,64,175,0.25);
+  --primary-hover: #2a2a2a;
+  --primary-dim: rgba(10,10,10,0.08);
+  --primary-border: rgba(10,10,10,0.2);
   --secondary: #f4f4f5;
   --secondary-foreground: #09090b;
   --muted: #f4f4f5;
@@ -66,7 +66,7 @@
   --destructive-dim: rgba(220,38,38,0.08);
   --border: #e4e4e7;
   --input: #e4e4e7;
-  --ring: #2D40AF;
+  --ring: #0a0a0a;
   --warning: #d97706;
   --warning-dim: rgba(217,119,6,0.08);
   --success: #16a34a;
@@ -79,18 +79,155 @@
 
 /* ── RESET ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; height: 100%; }
 body {
-  background: var(--background);
+  background: #111118;
+  transition: background 0.2s;
   color: var(--foreground);
   font-family: 'Geist', -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── PHONE FRAME ── */
+.phone-frame {
+  width: 393px;
+  height: 852px;
+  border-radius: 50px;
+  box-shadow:
+    0 0 0 2px #555,
+    0 0 0 10px #1c1c1e,
+    0 50px 120px rgba(0,0,0,0.85);
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: var(--background);
+  transform: translateZ(0);
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.phone-screen header {
+  position: relative;
+  flex-shrink: 0;
+}
+.phone-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+.phone-content .container { padding: 20px 16px 20px; }
+.phone-screen .nav-tabs { display: none; }
+.phone-screen header { padding: 0 16px; }
+.phone-screen .bottom-nav {
+  display: block !important;
+  position: relative !important;
+  flex-shrink: 0;
+}
+.phone-screen .output-row { flex-direction: column; }
+.phone-screen .output-row .btn { width: 100%; justify-content: center; }
+.phone-screen .modal-overlay { position: absolute; }
+.phone-screen footer { flex-shrink: 0; }
+:root.light body { background: #e8e8ed; }
+
+/* ── STATUS BAR ── */
+.status-bar {
+  flex-shrink: 0;
+  height: 54px;
+  background: var(--background);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 28px 8px;
+  position: relative;
+  z-index: 10;
+}
+/* Dynamic Island */
+.status-bar::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 34px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 20;
+}
+.status-time {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--foreground);
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-icons svg {
+  display: block;
+  flex-shrink: 0;
+}
+/* Signal bars */
+.signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.signal-bar {
+  width: 3px;
+  background: var(--foreground);
+  border-radius: 1px;
+}
+.signal-bar:nth-child(1) { height: 4px; }
+.signal-bar:nth-child(2) { height: 6px; }
+.signal-bar:nth-child(3) { height: 9px; }
+.signal-bar:nth-child(4) { height: 12px; }
+/* Battery */
+.battery {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+.battery-body {
+  width: 22px;
+  height: 11px;
+  border: 1.5px solid var(--foreground);
+  border-radius: 3px;
+  padding: 1.5px 2px;
+  display: flex;
+  align-items: center;
+}
+.battery-fill {
+  height: 100%;
+  width: 75%;
+  background: var(--foreground);
+  border-radius: 1px;
+}
+.battery-tip {
+  width: 2px;
+  height: 5px;
+  background: var(--foreground);
+  border-radius: 0 1px 1px 0;
+  opacity: 0.5;
 }
 .mono { font-family: 'Geist Mono', monospace; }
 
@@ -356,8 +493,8 @@ header {
   margin-bottom: 8px;
 }
 .page-heading {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 400;
   letter-spacing: -0.3px;
   color: var(--foreground);
 }
@@ -381,19 +518,31 @@ header {
 @keyframes shimmer { 0%,100%{opacity:0.4;}50%{opacity:0.8;} }
 
 /* ── EMPTY STATE ── */
-.empty-state {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 56px 20px; text-align: center;
+#emptyState {
+  /* phone(852) - status(54) - header(56) - datebar(40) - bottomnav(60) */
+  min-height: 642px;
+  background: var(--background);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
 }
+.empty-state { display: flex; }
 .empty-icon {
-  width: 52px; height: 52px; border-radius: 12px;
-  background: var(--primary-dim);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; margin-bottom: 16px;
-  color: var(--primary);
+  width: 190px;
+  height: 190px;
+  overflow: hidden;
+  flex-shrink: 0;
+  margin-bottom: 0;
 }
-.empty-title { font-size: 17px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.2px; }
+.empty-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.empty-title { font-size: 17px; font-weight: 600; margin-top: -28px; margin-bottom: 6px; letter-spacing: -0.2px; }
 .empty-sub { font-size: 13px; color: var(--muted-foreground); line-height: 1.65; max-width: 260px; margin-bottom: 20px; }
 
 /* ── OUTPUT SECTION ── */
@@ -423,7 +572,7 @@ header {
 
 /* ── CALENDAR STRIP ── */
 .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.cal-month { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; }
+.cal-month { font-size: 16px; font-weight: 400; letter-spacing: -0.2px; }
 .cal-nav-btns { display: flex; gap: 4px; }
 .cal-nav-btn {
   width: 30px; height: 30px; background: var(--background);
@@ -455,10 +604,10 @@ header {
 .cal-chip-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--primary); margin-top: 2px; }
 .cal-chip.today { border-color: var(--primary); }
 .cal-chip.today .cal-chip-day, .cal-chip.today .cal-chip-num { color: var(--primary); }
-.cal-chip.has-entry { cursor: pointer; }
+.cal-chip { cursor: pointer; }
 .cal-chip.has-entry .cal-chip-num { color: var(--foreground); }
 .cal-chip.has-entry:hover { border-color: var(--primary); background: var(--primary-dim); }
-.cal-chip.selected { background: var(--primary-dim); border-color: var(--primary); }
+.cal-chip.selected { background: #f5f5f5; border-color: var(--primary); }
 .cal-chip.selected .cal-chip-day, .cal-chip.selected .cal-chip-num { color: var(--primary); }
 
 /* Entry panel */
@@ -471,8 +620,12 @@ header {
 
 /* ── ACTIONS PAGE ── */
 .actions-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
-.actions-controls { display: flex; gap: 6px; align-items: center; margin-bottom: 12px; }
-.filter-row { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 16px; }
+.actions-controls { display: flex; align-items: center; margin-bottom: 12px; border: 1px solid var(--input); border-radius: var(--radius); overflow: hidden; }
+.actions-controls .input { border: none; border-radius: 0; flex: 1; box-shadow: none; }
+.actions-controls .input:focus { box-shadow: none; }
+.actions-controls .select { border: none; border-left: 1px solid var(--border); border-radius: 0; background: var(--background); color: var(--muted-foreground); font-size: 12px; padding: 8px 10px; cursor: pointer; outline: none; flex-shrink: 0; }
+.filter-row { display: flex; gap: 5px; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 16px; scrollbar-width: none; }
+.filter-row::-webkit-scrollbar { display: none; }
 
 .filter-btn {
   display: inline-flex; align-items: center; gap: 5px;
@@ -563,8 +716,16 @@ header {
 .action-card-meta { font-size: 12px; color: var(--muted-foreground); line-height: 1.5; }
 
 /* Empty board */
-.actions-empty { text-align: center; padding: 48px 20px; }
-.actions-empty-icon { font-size: 24px; opacity: 0.2; margin-bottom: 10px; }
+.actions-empty { text-align: center; padding: 48px 20px; display: flex; flex-direction: column; align-items: center; }
+.actions-empty-icon {
+  width: 48px; height: 48px;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+  color: var(--muted-foreground);
+}
 .actions-empty-text { font-size: 13px; color: var(--muted-foreground); line-height: 1.65; }
 
 /* ── SHARE MODAL ── */
@@ -608,15 +769,16 @@ header {
 }
 .bottom-nav-inner { display: flex; height: 60px; }
 .bottom-tab {
-  flex: 1; background: none; border: none; color: var(--muted-foreground);
+  flex: 1; background: none; border: none; color: var(--foreground);
   font-family: 'Geist', sans-serif; font-size: 10px; font-weight: 500;
   cursor: pointer; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 3px;
-  transition: color 0.15s; letter-spacing: 0.02em;
+  transition: color 0.15s, opacity 0.15s; letter-spacing: 0.02em;
+  opacity: 0.35;
 }
 .bottom-tab-icon { font-size: 16px; line-height: 1; }
 .bottom-lucide-icon { display: block; }
-.bottom-tab.active { color: var(--primary); }
+.bottom-tab.active { color: var(--foreground); opacity: 1; }
 
 /* ── RESPONSIVE ── */
 @media(max-width: 600px) {
@@ -638,6 +800,34 @@ footer {
 </style>
 </head>
 <body>
+<div class="phone-frame">
+<div class="phone-screen">
+
+<!-- ── STATUS BAR ── -->
+<div class="status-bar">
+  <div class="status-time" id="statusTime">9:41</div>
+  <div class="status-icons">
+    <!-- Signal -->
+    <div class="signal-bars">
+      <div class="signal-bar"></div>
+      <div class="signal-bar"></div>
+      <div class="signal-bar"></div>
+      <div class="signal-bar"></div>
+    </div>
+    <!-- Wi-Fi -->
+    <svg width="16" height="12" viewBox="0 0 24 18" fill="none">
+      <path d="M1 6.5C5.5 2 10.4 0 12 0s6.5 2 11 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M4.5 10.5C7 8 9.7 7 12 7s5 1 7.5 3.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M8 14.5C9.5 13 10.8 12.5 12 12.5s2.5.5 4 2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="12" cy="17" r="1.5" fill="currentColor"/>
+    </svg>
+    <!-- Battery -->
+    <div class="battery">
+      <div class="battery-body"><div class="battery-fill"></div></div>
+      <div class="battery-tip"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ── HEADER ── -->
 <header>
@@ -649,61 +839,51 @@ footer {
   </nav>
   <div class="nav-right">
     <div class="streak-badge" id="streakBadge">🔥 <span id="streakCount">0</span>d</div>
-    <button class="btn btn-ghost btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">☀️</button>
+    <button class="btn btn-ghost btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">
+      <!-- Sun icon (shown in dark mode) -->
+      <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <!-- Moon icon (shown in light mode) -->
+      <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </button>
   </div>
 </header>
 
-<!-- ── MOBILE BOTTOM NAV ── -->
-<div class="bottom-nav">
-  <div class="bottom-nav-inner">
-    <button class="bottom-tab active" id="btab-journal" onclick="showPage('journal')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Journal
-    </button>
-    <button class="bottom-tab" id="btab-calendar" onclick="showPage('calendar')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Calendar
-    </button>
-    <button class="bottom-tab" id="btab-actions" onclick="showPage('actions')">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Actions
-    </button>
-  </div>
-</div>
+<div class="phone-content">
 
 <!-- ════ JOURNAL PAGE ════ -->
 <div class="page active" id="page-journal">
   <div class="container">
-    <p id="dateStamp" style="font-size:12px;color:var(--muted-foreground);margin-bottom:20px;font-weight:500;"></p>
 
     <!-- Input -->
     <div id="inputSection">
       <!-- Empty state -->
       <div id="emptyState" class="empty-state" style="display:none;">
-        <div class="empty-icon">✦</div>
+        <div class="empty-icon"><img src="trans.png" alt=""></div>
         <div class="empty-title">Start your first entry</div>
         <p class="empty-sub">Write about your day or a problem you're working through. Claude will summarise and build you an action plan.</p>
         <button class="btn btn-default" onclick="document.getElementById('emptyState').style.display='none';document.getElementById('inputCard').style.display='block';document.getElementById('journalInput').focus()">
-          Write first entry →
+          Write first entry
         </button>
       </div>
 
       <!-- Input card -->
-      <div id="inputCard" class="card">
-        <div class="card-header" style="padding-bottom:14px;">
-          <div style="flex:1;">
-            <div class="card-title">What's on your mind?</div>
-            <div class="card-description">Your entry is analysed by Claude and never stored on a server.</div>
-          </div>
+      <div id="inputCard" style="border:none;background:none;">
+        <div style="margin-bottom:14px;">
+          <div class="card-title">What's on your mind?</div>
+          <div class="card-description">Your entry is analysed by Claude and never stored on a server.</div>
         </div>
-        <div class="card-content" style="padding-top:0;">
-          <textarea class="textarea" id="journalInput" placeholder="Tell me about your day or a problem you're facing…"></textarea>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
-            <span class="text-xs text-muted" id="charCount">0 characters</span>
+        <textarea class="textarea" id="journalInput" placeholder="Tell me about your day or a problem you're facing…"></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+          <span class="text-xs text-muted" id="charCount">0 characters</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('inputCard').style.display='none';document.getElementById('emptyState').style.display='flex';">Cancel</button>
             <button class="btn btn-default" id="submitBtn" onclick="analyseEntry()">
               <span class="spinner" id="spinner"></span>
               <span id="btnText">Analyse</span>
             </button>
           </div>
-          <div class="alert alert-destructive" id="errorMsg" style="margin-top:10px;"></div>
         </div>
+        <div class="alert alert-destructive" id="errorMsg" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -775,7 +955,10 @@ footer {
 
     <!-- Month header -->
     <div class="cal-header">
-      <span class="cal-month" id="calMonthLabel"></span>
+      <div>
+        <span class="cal-month" id="calMonthLabel"></span>
+        <p id="calInstruction" style="font-size:13px;color:var(--muted-foreground);margin-top:2px;">Select a day to read its entry</p>
+      </div>
       <div class="cal-nav-btns">
         <button class="cal-nav-btn" onclick="changeCalMonth(-1)">‹</button>
         <button class="cal-nav-btn" onclick="changeCalMonth(1)">›</button>
@@ -790,14 +973,7 @@ footer {
     </div>
 
     <!-- Entry panel -->
-    <div id="entryPanel">
-      <div class="card">
-        <div class="card-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:140px;gap:6px;">
-          <div style="font-size:22px;opacity:0.2;">◎</div>
-          <p class="text-sm text-muted" style="text-align:center;">Select a highlighted day<br>to read its entry</p>
-        </div>
-      </div>
-    </div>
+    <div id="entryPanel"></div>
   </div>
 </div>
 
@@ -809,10 +985,12 @@ footer {
     <div class="actions-toolbar">
       <h2 class="page-heading">Action Board</h2>
       <div class="download-wrap">
-        <button class="btn btn-outline btn-sm" onclick="toggleDownload(event)">↓ Download ▾</button>
+        <button class="btn btn-ghost btn-icon" onclick="toggleDownload(event)" title="Download">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        </button>
         <div class="download-menu" id="downloadMenu">
-          <button class="download-item" onclick="exportCSV();closeDownload()">↓ CSV <span class="download-hint">Excel / Sheets</span></button>
-          <button class="download-item" onclick="exportMarkdown();closeDownload()">↓ Markdown <span class="download-hint">Notion / Obsidian</span></button>
+          <button class="download-item" onclick="exportCSV();closeDownload()"><div style="text-align:left"><div>CSV</div><div class="download-hint">Excel / Sheets</div></div></button>
+          <button class="download-item" onclick="exportMarkdown();closeDownload()"><div style="text-align:left"><div>Markdown</div><div class="download-hint">Notion / Obsidian</div></div></button>
         </div>
       </div>
     </div>
@@ -834,7 +1012,7 @@ footer {
       <button class="filter-btn" id="fbtn-medium" onclick="setFilter('medium',this)">Medium <span class="filter-badge" id="fbadge-medium"></span></button>
       <button class="filter-btn" id="fbtn-low" onclick="setFilter('low',this)">Low <span class="filter-badge" id="fbadge-low"></span></button>
       <button class="filter-btn" id="fbtn-todo" onclick="setFilter('todo',this)">To Do <span class="filter-badge" id="fbadge-todo"></span></button>
-      <button class="filter-btn" id="fbtn-done" onclick="setFilter('done',this)">✓ Done <span class="filter-badge" id="fbadge-done"></span></button>
+      <button class="filter-btn" id="fbtn-done" onclick="setFilter('done',this)">Done <span class="filter-badge" id="fbadge-done"></span></button>
     </div>
 
     <div class="date-banner" id="dateBanner">
@@ -844,6 +1022,24 @@ footer {
     <div class="separator" style="margin-bottom:16px;"></div>
 
     <div id="actionsBoard"></div>
+  </div>
+</div>
+
+
+</div><!-- /phone-content -->
+
+<!-- ════ API KEY MODAL ════ -->
+<div class="modal-overlay hidden" id="apiKeyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeApiKeyModal()">✕</button>
+    <div class="modal-title">Connect Claude</div>
+    <div class="modal-desc">Enter your Anthropic API key to enable analysis. It's stored locally on your device only.</div>
+    <input class="input" id="apiKeyInput" type="password" placeholder="sk-ant-…" style="margin-bottom:8px;" onkeydown="if(event.key==='Enter')saveApiKey()">
+    <div id="apiKeyError" style="display:none;font-size:12px;color:var(--destructive);margin-bottom:8px;">Invalid key — must start with sk-ant-</div>
+    <div class="modal-btns">
+      <button class="btn btn-default" onclick="saveApiKey()">Save & Analyse</button>
+      <button class="btn btn-outline" onclick="closeApiKeyModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -861,7 +1057,23 @@ footer {
   </div>
 </div>
 
-<footer>Debrief · Powered by Claude</footer>
+<!-- ── MOBILE BOTTOM NAV ── -->
+<div class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bottom-tab active" id="btab-journal" onclick="showPage('journal')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Journal
+    </button>
+    <button class="bottom-tab" id="btab-calendar" onclick="showPage('calendar')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>Calendar
+    </button>
+    <button class="bottom-tab" id="btab-actions" onclick="showPage('actions')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>Actions
+    </button>
+  </div>
+</div>
+
+</div><!-- /phone-screen -->
+</div><!-- /phone-frame -->
 
 <script>
 // ══ STORAGE ══
@@ -880,15 +1092,19 @@ function formatLabel(k) { return fromKey(k).toLocaleDateString('en-GB',{weekday:
 document.getElementById('dateStamp').textContent = today.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
 // ══ THEME ══
+function setThemeIcons(light) {
+  document.getElementById('iconSun').style.display  = light ? 'none'  : '';
+  document.getElementById('iconMoon').style.display = light ? ''      : 'none';
+}
 function toggleTheme() {
   const light = document.documentElement.classList.toggle('light');
   localStorage.setItem('debrief_theme', light ? 'light' : 'dark');
-  document.getElementById('themeBtn').textContent = light ? '🌙' : '☀️';
+  setThemeIcons(light);
 }
 (function initTheme() {
   if (localStorage.getItem('debrief_theme') === 'light') {
     document.documentElement.classList.add('light');
-    document.getElementById('themeBtn').textContent = '🌙';
+    setThemeIcons(true);
   }
 })();
 
@@ -931,6 +1147,13 @@ let _result = null;
 async function analyseEntry() {
   const input = textarea.value.trim();
   if (!input || input.length < 20) { showError('Please write a bit more for a better debrief.'); return; }
+
+  let apiKey = localStorage.getItem('debrief_apikey');
+  if (!apiKey) {
+    showApiKeyModal();
+    return;
+  }
+
   document.getElementById('submitBtn').disabled = true;
   document.getElementById('spinner').style.display = 'block';
   document.getElementById('btnText').textContent = 'Analysing…';
@@ -943,12 +1166,21 @@ async function analyseEntry() {
 Generate 3-5 concrete, specific actions.`;
 
   try {
-    const res = await fetch('/api/chat', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: sys, messages: [{ role: 'user', content: input }] })
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5-20251001', max_tokens: 1000, system: sys, messages: [{ role: 'user', content: input }] })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'API error');
+    if (!res.ok) {
+      if (res.status === 401) { localStorage.removeItem('debrief_apikey'); }
+      throw new Error(data.error?.message || 'API error');
+    }
     const raw = data.content.find(b => b.type === 'text')?.text || '';
     const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
     parsed.actions = parsed.actions.map((a, i) => ({ ...a, uid: `${todayKey}_${i}_${Date.now()}` }));
@@ -966,6 +1198,21 @@ Generate 3-5 concrete, specific actions.`;
     document.getElementById('btnText').textContent = 'Analyse';
     showError('Something went wrong: ' + err.message);
   }
+}
+
+function showApiKeyModal() {
+  document.getElementById('apiKeyModal').classList.remove('hidden');
+  document.getElementById('apiKeyInput').focus();
+}
+function closeApiKeyModal() {
+  document.getElementById('apiKeyModal').classList.add('hidden');
+}
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-ant-')) { document.getElementById('apiKeyError').style.display='block'; return; }
+  localStorage.setItem('debrief_apikey', key);
+  closeApiKeyModal();
+  analyseEntry();
 }
 
 function renderOutput(data) {
@@ -1047,7 +1294,7 @@ function renderCalendar() {
     const chip = document.createElement('div');
     chip.className = 'cal-chip' + (has?' has-entry':'') + (isToday?' today':'') + (isSel?' selected':'');
     chip.innerHTML = `<div class="cal-chip-day">${DAYS[date.getDay()]}</div><div class="cal-chip-num">${d}</div>${has?'<div class="cal-chip-dot"></div>':''}`;
-    if (has) chip.onclick = () => selectDay(key);
+    chip.onclick = () => selectDay(key);
     strip.appendChild(chip);
   }
   setTimeout(() => {
@@ -1068,7 +1315,9 @@ function selectDay(key) {
   const [,,td] = key.split('-').map(Number);
   if (chips[td-1]) { chips[td-1].classList.add('selected'); chips[td-1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }
   const entry = getEntries()[key];
-  if (!entry) return;
+  const instr = document.getElementById('calInstruction');
+  if (!entry) { if (instr) instr.style.display = ''; return; }
+  if (instr) instr.style.display = 'none';
   const themes = (entry.themes||[]).map(t => `<span class="badge badge-secondary">${t}</span>`).join('');
   document.getElementById('entryPanel').innerHTML = `
     <div class="card">
@@ -1157,7 +1406,7 @@ function renderBoard() {
 
   board.innerHTML = '';
   if (!filtered.length) {
-    board.innerHTML = `<div class="actions-empty"><div class="actions-empty-icon">▸</div><div class="actions-empty-text">${all.length === 0 ? 'No actions yet — write a journal entry first.' : 'No actions match this filter.'}</div></div>`;
+    board.innerHTML = `<div class="actions-empty"><div class="actions-empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg></div><div class="actions-empty-text">${all.length === 0 ? 'No actions yet — write a journal entry first.' : 'No actions match this filter.'}</div></div>`;
     return;
   }
 
@@ -1262,6 +1511,17 @@ function exportMarkdown() {
 
 // ══ INIT ══
 renderStreak();
+
+// ══ STATUS BAR CLOCK ══
+function updateClock() {
+  const el = document.getElementById('statusTime');
+  if (!el) return;
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  el.textContent = h + ':' + String(m).padStart(2, '0');
+}
+updateClock();
+setInterval(updateClock, 10000);
 </script>
 </body>
 </html>
