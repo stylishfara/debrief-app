@@ -1015,31 +1015,6 @@ async function analyseEntry() {
   const input = textarea.value.trim();
   if (!input || input.length < 20) { showError('Please write a bit more for a better debrief.'); return; }
 
-  // ── DEMO MODE: bypass API ──
-  document.getElementById('submitBtn').disabled = true;
-  document.getElementById('spinner').style.display = 'block';
-  document.getElementById('btnText').textContent = 'Analysing…';
-  document.getElementById('writeInputSection').style.display = 'none';
-  document.getElementById('skeletonWrap').style.display = 'block';
-  await new Promise(r => setTimeout(r, 1200));
-  const dummyParsed = {
-    summary: "You've been juggling a lot today — between deep work and back-to-back meetings, it's clear you're feeling the tension between doing and planning. There's real momentum here, but also a need to protect your focus time more deliberately.",
-    themes: ["focus", "productivity", "planning", "meetings", "energy"],
-    actions: [
-      { title: "Block 2-hour deep work slots in your calendar", why: "Uninterrupted time is where your best work happens — guard it like a meeting.", priority: "high", uid: `${todayKey}_0_demo` },
-      { title: "Write a 3-item priority list each morning", why: "Starting the day with clarity reduces decision fatigue and keeps you on track.", priority: "high", uid: `${todayKey}_1_demo` },
-      { title: "Decline or delegate one recurring meeting this week", why: "Not every meeting needs you — freeing even one hour compounds over time.", priority: "medium", uid: `${todayKey}_2_demo` },
-      { title: "Do a 10-minute end-of-day review", why: "A quick daily reflection closes open loops and helps you decompress.", priority: "low", uid: `${todayKey}_3_demo` },
-    ]
-  };
-  const entry = { raw: input, summary: dummyParsed.summary, themes: dummyParsed.themes, actions: dummyParsed.actions, date: todayKey, savedAt: new Date().toISOString() };
-  saveEntry(todayKey, entry);
-  _result = dummyParsed;
-  renderStreak();
-  showPage('calendar');
-  return;
-  // ── END DEMO MODE ──
-
   let apiKey = localStorage.getItem('debrief_apikey');
   if (!apiKey) {
     showApiKeyModal();
