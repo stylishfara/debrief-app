@@ -711,11 +711,7 @@ header {
   display: none; position: fixed; bottom: 0; left: 0; right: 0;
   z-index: 50; background: var(--nav-bg); backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
-  /* In Safari browser, add extra 49px for the toolbar; in PWA standalone mode it's not needed */
-  padding-bottom: calc(env(safe-area-inset-bottom) + 49px);
-}
-@media (display-mode: standalone) {
-  .bottom-nav { padding-bottom: env(safe-area-inset-bottom); }
+  padding-bottom: env(safe-area-inset-bottom);
 }
 .bottom-nav-inner { display: flex; height: 60px; justify-content: center; gap: 0; }
 .bottom-tab {
@@ -742,9 +738,6 @@ header {
   header .nav-tabs { display: none; }
   header { padding: 0 16px; }
   .bottom-nav { display: block; }
-  .container { padding: 20px 16px calc(76px + env(safe-area-inset-bottom) + 49px); }
-}
-@media (max-width: 600px) and (display-mode: standalone) {
   .container { padding: 20px 16px calc(76px + env(safe-area-inset-bottom)); }
   .actions-controls { flex-wrap: nowrap; }
   .output-row { flex-direction: column; }
@@ -1405,6 +1398,20 @@ function exportMarkdown() {
 // ══ INIT ══
 renderStreak();
 renderCalendar();
+
+// ── iOS Safari bottom toolbar fix ──
+(function() {
+  const nav = document.querySelector('.bottom-nav');
+  if (!nav || !window.visualViewport) return;
+  function updateNavPosition() {
+    const vv = window.visualViewport;
+    const offset = window.innerHeight - vv.height - vv.offsetTop;
+    nav.style.transform = `translateY(-${Math.max(0, offset)}px)`;
+  }
+  window.visualViewport.addEventListener('resize', updateNavPosition);
+  window.visualViewport.addEventListener('scroll', updateNavPosition);
+  updateNavPosition();
+})();
 
 </script>
 </body>
