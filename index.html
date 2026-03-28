@@ -1189,6 +1189,23 @@ function clearDateFilter() {
 function showActionsForDate(key) { filterDateKey = key; currentFilter = 'all'; showPage('actions'); }
 function priorityOrder(p) { return p==='high'?0:p==='medium'?1:2; }
 
+function getQuickAction(title) {
+  const t = title.toLowerCase();
+  if (/meet(ing)?|video call|zoom|google meet|sync with|catch up/.test(t))
+    return { label: 'Open Google Meet', url: 'https://meet.google.com/new', icon: '📹' };
+  if (/calendar|schedule|block time|time slot|book|add to cal/.test(t))
+    return { label: 'Open Calendar', url: 'https://calendar.google.com/calendar/r/eventedit', icon: '📅' };
+  if (/email|gmail|send a message|follow up|write to|reach out/.test(t))
+    return { label: 'Compose Email', url: 'https://mail.google.com/mail/u/0/#compose', icon: '✉️' };
+  if (/notion|document|write up|notes|draft/.test(t))
+    return { label: 'Open Notion', url: 'https://www.notion.so/', icon: '📝' };
+  if (/slack|message|dm|ping/.test(t))
+    return { label: 'Open Slack', url: 'https://slack.com/app_redirect', icon: '💬' };
+  if (/linkedin|connect with|network/.test(t))
+    return { label: 'Open LinkedIn', url: 'https://www.linkedin.com/', icon: '🔗' };
+  return null;
+}
+
 function renderBoard() {
   const entries = getEntries(), done = getDone();
   const search = (document.getElementById('actionSearch')?.value || '').toLowerCase();
@@ -1276,6 +1293,7 @@ function renderBoard() {
 
     actions.forEach(a => {
       const isDone = done.includes(a.uid);
+      const qa = getQuickAction(a.title);
       const card = document.createElement('div');
       card.className = 'action-card' + (isDone ? ' done' : '');
       card.style.cssText = `border-left:3px solid ${pc[a.priority]||'var(--border)'};padding:10px 14px 10px 12px;border-radius:0 6px 6px 0;margin-bottom:8px;background:none;border-top:none;border-right:none;border-bottom:none;`;
@@ -1283,6 +1301,7 @@ function renderBoard() {
         <div class="action-card-body">
           <div class="action-card-title">${a.title}</div>
           <div class="action-card-meta">${a.why}</div>
+          ${qa ? `<a href="${qa.url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:12px;font-weight:500;color:var(--foreground);border:1px solid var(--border);border-radius:6px;padding:4px 10px;text-decoration:none;background:var(--background);">${qa.icon} ${qa.label}</a>` : ''}
         </div>
         <div class="action-check" style="flex-shrink:0;margin-top:2px;">${isDone ? '✓' : ''}</div>
       `;
