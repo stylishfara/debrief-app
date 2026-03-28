@@ -976,7 +976,7 @@ async function analyseEntry() {
   document.getElementById('submitBtn').disabled = true;
   document.getElementById('spinner').style.display = 'block';
   document.getElementById('btnText').textContent = 'Analysing…';
-  document.getElementById('inputSection').style.display = 'none';
+  document.getElementById('writeInputSection').style.display = 'none';
   document.getElementById('skeletonWrap').style.display = 'block';
 
   const sys = `You are a personal productivity coach. Respond ONLY with raw JSON, no markdown.
@@ -992,7 +992,7 @@ Generate 3-5 concrete, specific actions.`;
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5-20251001', max_tokens: 1000, system: sys, messages: [{ role: 'user', content: input }] })
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, system: sys, messages: [{ role: 'user', content: input }] })
     });
     const data = await res.json();
     if (!res.ok) {
