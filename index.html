@@ -1092,7 +1092,10 @@ function renderCalendar() {
   const strip = document.getElementById('calStrip');
   strip.innerHTML = '';
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const [ty, tm, td_today] = todayKey.split('-').map(Number);
   for (let d = 1; d <= daysInMonth; d++) {
+    // Skip future dates
+    if (calYear > ty || (calYear === ty && calMonth > tm - 1) || (calYear === ty && calMonth === tm - 1 && d > td_today)) break;
     const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const date = new Date(calYear, calMonth, d);
     const has = !!entries[key], isToday = key === todayKey, isSel = key === selectedKey;
@@ -1125,8 +1128,13 @@ function selectDay(key) {
   const instr = document.getElementById('calInstruction');
   const panel = document.getElementById('entryPanel');
   if (!entry) {
-    if (instr) instr.style.display = '';
-    panel.innerHTML = '';
+    if (instr) instr.style.display = 'none';
+    panel.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;text-align:center;">
+        <img src="trans.png" alt="" style="width:140px;height:140px;object-fit:contain;margin-bottom:12px;opacity:0.7;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">No entry for ${formatLabel(key)}</div>
+        <div style="font-size:13px;color:var(--muted-foreground);line-height:1.5;">You didn't write on this day.<br>Head to Write to add one.</div>
+      </div>`;
     return;
   }
   if (instr) instr.style.display = 'none';
